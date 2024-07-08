@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const DynamicForm = () => {
   const { id } = useParams(); // Get the form ID from the URL parameters
+  const navigate = useNavigate(); // To navigate after form submission
+
   const [formData, setFormData] = useState({});
   const [formElements, setFormElements] = useState([]);
   const [formTitle, setFormTitle] = useState('');
@@ -11,18 +13,14 @@ const DynamicForm = () => {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        console.log(id)
         const response = await fetch(`http://localhost:5000/getForm/${id}`);
-        console.log(response)
         if (!response.ok) {
           throw new Error(`Error fetching form: ${response.statusText}`);
         }
         const form = await response.json();
-        console.log(form)
         setFormElements(form.data);
         setFormTitle(form.title);
         setFormDescription(form.description);
-        console.log(form.data, form.title)
       } catch (error) {
         console.error('Error fetching form:', error);
       }
@@ -40,18 +38,27 @@ const DynamicForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formId = id; // Use the actual form ID from the URL
-    const response = await fetch('/api/submitForm', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ formId, filledData: formData }),
-    });
-    const result = await response.json();
-    console.log(result);
+    try {
+      // Assuming formData is properly populated by handleChange
+      const response = await fetch('http://localhost:5000/submitForm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ formId: id, filledData: formData }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error submitting form: ${response.statusText}`);
+      }
+      const result = await response.json();
+      console.log('Form submitted successfully:', result);
+      // Optionally, you can navigate to another page or show a success message here
+      navigate(`/submission-success`);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Handle error state here (e.g., display an error message)
+    }
   };
-
   return (
     <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">{formTitle}</h2>
