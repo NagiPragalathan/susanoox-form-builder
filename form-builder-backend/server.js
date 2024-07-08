@@ -25,7 +25,7 @@ const Form = mongoose.model('Form', FormSchema);
 
 const SubmissionSchema = new mongoose.Schema({
   formId: mongoose.Schema.Types.ObjectId,
-  filledData: Object,
+  filledData: Array,
   submittedAt: { type: Date, default: Date.now },
 });
 
@@ -72,6 +72,7 @@ app.get('/getForm/:id', async (req, res) => {
 app.post('/submitForm', async (req, res) => {
   const { formId, filledData } = req.body;
   try {
+    // Create the submission object with the form ID and filled data
     const submission = new Submission({ formId: new mongoose.Types.ObjectId(formId), filledData });
     await submission.save();
     res.status(201).json(submission);

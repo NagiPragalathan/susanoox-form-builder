@@ -39,26 +39,30 @@ const DynamicForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Assuming formData is properly populated by handleChange
+      // Create filled data array with labels and values
+      const filledData = formElements.map(element => ({
+        label: element.value,
+        value: formData[element.id]
+      }));
+      
       const response = await fetch('http://localhost:5000/submitForm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ formId: id, filledData: formData }),
+        body: JSON.stringify({ formId: id, filledData }),
       });
       if (!response.ok) {
         throw new Error(`Error submitting form: ${response.statusText}`);
       }
       const result = await response.json();
       console.log('Form submitted successfully:', result);
-      // Optionally, you can navigate to another page or show a success message here
       navigate(`/submission-success`);
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Handle error state here (e.g., display an error message)
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">{formTitle}</h2>

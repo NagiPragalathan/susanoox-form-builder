@@ -29,7 +29,22 @@ const FormSubmissions = () => {
       {submissions.map((submission, index) => (
         <div key={index} className="mb-4">
           <h3 className="text-xl font-bold mb-2">Submission {index + 1}</h3>
-          <pre className="bg-gray-100 p-2 rounded">{JSON.stringify(submission.filledData, null, 2)}</pre>
+          <table className="min-w-full bg-white">
+            <thead>
+              <tr>
+                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-100">Label</th>
+                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-100">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submission.filledData.map((item, idx) => (
+                <tr key={idx}>
+                  <td className="py-2 px-4 border-b border-gray-200">{item.label}</td>
+                  <td className="py-2 px-4 border-b border-gray-200">{item.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ))}
     </div>
