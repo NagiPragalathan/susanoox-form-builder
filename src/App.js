@@ -7,9 +7,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<FormBuilder />} />
+        <Route path="/" element={<ListForms />} />
         <Route path="/form/:id" element={<FormBuilder />} />
-        <Route path="/new" element={<ListForms />} />
       </Routes>
     </Router>
   );

@@ -9,6 +9,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Button from '@material-ui/core/Button';
 // Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+import SaveIcon from '@material-ui/icons/Save';
 // Form Elements
 import {
   TextFieldInput,
@@ -23,6 +24,7 @@ import { formEl } from "./constants.js";
 // Components
 import Header from "./Header";
 import { useParams } from 'react-router-dom';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 // Custom hook to use local storage
 const useLocalStorage = (key, initialValue) => {
@@ -52,14 +54,16 @@ const useLocalStorage = (key, initialValue) => {
 const FormBuilder = () => {
   const initVal = formEl[0]?.value;
   const { id } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [title, setTitle] = useLocalStorage("formTitle", "Untitled Form");
   const [description, setDescription] = useLocalStorage("formDescription", "");
   const [data, setData] = useLocalStorage("formData", []);
   const [formData, setFormData] = useLocalStorage("formElementType", "text");
+  const [isFetched, setIsFetched] = useState(false);
 
   useEffect(() => {
-    if (id) {
+    if (id && !isFetched) {
       const fetchForm = async () => {
         try {
           const response = await axios.get(`http://localhost:5000/getForm/${id}`);
@@ -67,13 +71,14 @@ const FormBuilder = () => {
           setTitle(form.title || "Untitled Form");
           setDescription(form.description || "");
           setData(form.data || []);
+          setIsFetched(true); // Set the flag to true after fetching data
         } catch (error) {
           console.error('Error fetching form:', error);
         }
       };
       fetchForm();
     }
-  }, [id, setTitle, setDescription, setData]);
+  }, [id, isFetched, setTitle, setDescription, setData]);
 
   const items = data;
 
@@ -232,8 +237,10 @@ const FormBuilder = () => {
         data
       });
       console.log('Form saved successfully:', response.data);
+      enqueueSnackbar('Form saved successfully!', { variant: 'success' }); // Show success toast message
     } catch (error) {
       console.error('Error saving form:', error);
+      enqueueSnackbar('Error saving form!', { variant: 'error' }); // Show error toast message
     }
   };
 
@@ -334,9 +341,6 @@ const FormBuilder = () => {
             maxDepth={1}
             onChange={handleOnChangeSort}
           />
-          <Button variant="contained" color="primary" onClick={saveForm}>
-            Save Form
-          </Button>
         </Grid>
         <Grid item md={1}>
           <Tooltip title="Add Element" aria-label="add-element">
@@ -348,10 +352,25 @@ const FormBuilder = () => {
               <AddCircleOutlineOutlinedIcon color="secondary" />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Save Form" aria-label="save-form">
+            <IconButton
+              aria-label="save-form"
+              onClick={saveForm}
+              sx={{ position: "sticky", top: 30 }} // Adjust the position as needed
+            >
+              <SaveIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     </Fragment>
   );
 };
 
-export default FormBuilder;
+const App = () => (
+  <SnackbarProvider maxSnack={3}>
+    <FormBuilder />
+  </SnackbarProvider>
+);
+
+export default App;

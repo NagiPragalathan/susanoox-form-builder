@@ -37,7 +37,7 @@ app.post('/saveForm', async (req, res) => {
     }
 
     console.log('Form saved successfully:', form);
-    res.status(201).json({ message: 'Form saved successfully!', formId: form._id });
+    res.status(201).json(form); // Return the whole form object including _id
   } catch (error) {
     console.error('Error saving form:', error);
     res.status(500).json({ message: 'Error saving form', error });

@@ -39,7 +39,7 @@ const ListForms = () => {
       });
       setForms([...forms, response.data]);
       handleClose();
-      navigate(`/form/${response.data._id}`);
+      navigate(`/form/${response.data._id}`); // Navigate to the form builder page with the new form ID
     } catch (error) {
       console.error('Error creating form:', error);
     }
