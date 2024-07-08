@@ -69,6 +69,10 @@ app.get('/getForm/:id', async (req, res) => {
   }
 });
 
+app.get("/health", (req, res) =>{
+  res.status(200).json({ message: "OK" });
+})
+
 app.post('/submitForm', async (req, res) => {
   const { formId, filledData } = req.body;
   try {
