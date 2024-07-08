@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import FormBuilder from "@components/FormBuilder";
 import ListForms from "./components/ListForms";
+import DynamicForm from "./components/DynamicForm";
 import "react-nestable/dist/styles/index.css";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<ListForms />} />
+        <Route path="/preview/:id" element={<DynamicForm />} />
         <Route path="/form/:id" element={<FormBuilder />} />
       </Routes>
     </Router>

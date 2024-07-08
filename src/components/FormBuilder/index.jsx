@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
 // Icons
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import SaveIcon from '@material-ui/icons/Save';
@@ -25,7 +26,6 @@ import { formEl } from "./constants.js";
 import Header from "./Header";
 import { useParams } from 'react-router-dom';
 import { SnackbarProvider, useSnackbar } from 'notistack';
-
 // Custom hook to use local storage
 const useLocalStorage = (key, initialValue) => {
   const [storedValue, setStoredValue] = useState(() => {
@@ -327,42 +327,41 @@ const FormBuilder = () => {
 
   return (
     <Fragment>
-      <Grid container spacing={1} direction="row" justifyContent="center">
-        <Grid item md={6}>
-          <Header
-            title={title}
-            setTitle={setTitle}
-            description={description}
-            setDescription={setDescription}
-          />
-          <Nestable
-            items={items}
-            renderItem={renderElements}
-            maxDepth={1}
-            onChange={handleOnChangeSort}
-          />
+      <div className="p-[2%]">
+        <div className="flex justify-center w-full align-center p-10 pl-10 ml-[-28px]">
+          <h1 class="mb-4 text-3xl font-bold text-gray-900 dark:text-gray-500 md:text-5xl lg:text-4xl"><span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">Susanoox</span> Form-builder.</h1>
+        </div>
+        <Grid container spacing={1} direction="row" justifyContent="center">
+          <Grid item md={6}>
+            <Header
+              title={title}
+              setTitle={setTitle}
+              description={description}
+              setDescription={setDescription}
+            />
+            <Nestable
+              items={items}
+              renderItem={renderElements}
+              maxDepth={1}
+              onChange={handleOnChangeSort}
+            />
+          </Grid>
+          <Grid item md={1}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', position: 'sticky', top: 30 }}>
+              <Tooltip title="Add Element" aria-label="add-element">
+                <IconButton aria-label="add-element" onClick={addElement}>
+                  <AddCircleOutlineOutlinedIcon color="secondary" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Save Form" aria-label="save-form">
+                <IconButton aria-label="save-form" onClick={saveForm} sx={{ marginTop: 2 }}>
+                  <SaveIcon color="secondary" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item md={1}>
-          <Tooltip title="Add Element" aria-label="add-element">
-            <IconButton
-              aria-label="add-element"
-              onClick={addElement}
-              sx={{ position: "sticky", top: 30 }}
-            >
-              <AddCircleOutlineOutlinedIcon color="secondary" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Save Form" aria-label="save-form">
-            <IconButton
-              aria-label="save-form"
-              onClick={saveForm}
-              sx={{ position: "sticky", top: 30 }} // Adjust the position as needed
-            >
-              <SaveIcon color="secondary" />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      </Grid>
+      </div>
     </Fragment>
   );
 };
