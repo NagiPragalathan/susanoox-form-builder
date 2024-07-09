@@ -116,7 +116,6 @@ workbox-config.js
 # Gatsby files
 .cache/
 .cache-loader/
-public/
 
 # Eleventy files
 .eleventy.js
